@@ -1,6 +1,6 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCartRequest } from 'src/interfaces/cart.interfaces.dto';
+import { AddCartRequest, CreateCartRequest, RemoveItemFromCartRequest } from 'src/interfaces/cart.interfaces.dto';
 import { CartService } from 'src/services/cart.service';
 
 @ApiTags("Cart Management")
@@ -8,10 +8,10 @@ import { CartService } from 'src/services/cart.service';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-//   @Get("/read")
-//   async readCart(): Promise<any> {
-//     return this.orderService.getHello();
-//   }
+  @Get("/read/:id")
+  async readCart(@Param('id') cartId: string): Promise<any> {
+    return this.cartService.readCartData(cartId);
+  }
 
   @Post("/create")
   async createCart(@Res() res, @Body() payload: CreateCartRequest): Promise<any> {
@@ -37,14 +37,53 @@ export class CartController {
 
   }
 
-//   @Patch("/update")
-//   async updateCart(): Promise<any> {
-//     return this.orderService.getHello();
-//   }
+  @Patch("/add/item")
+  async updateCart(@Res() res, @Body() payload: AddCartRequest): Promise<any> {
+    try{
+      for(const item of payload.product_data){
+        await this.cartService.createCartItems({ 
+          cart_id: payload.cart_id,
+          item_name: item.product_name,
+          item_qty: item.product_qty,
+          item_amount: item.product_amount,
+          item_code: item.product_code
+        });
+      }
+      return res.status(HttpStatus.OK).json({message: "Success"});
+    }catch(error){
+      console.log(error)
+      return res.status(500).json({
+          message: "Whoops. Error Occured"
+      });
+    }
+  }
 
-//   @Delete("/delete")
-//   async deleteCart(): Promise<any> {
-//     return this.orderService.getHello();
-//   }
+  @Delete("/remove/item")
+  async deleteItemsOnCart(@Res() res, @Body() payload: RemoveItemFromCartRequest): Promise<any> {
+    try{
+      for(const item of payload.product_data){
+        await this.cartService.removeItemFromCart({cart_id: payload.cart_id, payload: item});
+      }
+      return res.status(HttpStatus.OK).json({message: "Success"});
+    }catch(error){
+      console.log(error)
+      return res.status(500).json({
+          message: "Whoops. Error Occured"
+      });
+    }
+  }
+
+  @Delete("/delete/:id")
+  async deleteCart(@Res() res, @Param('id') cartId: string): Promise<any> {
+    try{
+      await this.cartService.deleteCart(parseInt(cartId));
+      return res.status(HttpStatus.OK).json({message: "Success"});
+    }catch(error){
+      console.log(error)
+      return res.status(500).json({
+          message: "Whoops. Error Occured"
+      });
+    }
+  }
 
 }
