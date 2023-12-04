@@ -9,8 +9,18 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get("/read/:id")
-  async readCart(@Param('id') cartId: string): Promise<any> {
-    return this.cartService.readCartData(cartId);
+  async readCart(@Res() res, @Param('id') cartId: string): Promise<any> {
+    const exists = await this.cartService.readCartData(cartId);
+
+    if(!cartId){
+      return res.status(HttpStatus.BAD_REQUEST).json({message: "Please fill in the cart information"});
+    }
+    
+    if(!exists){
+      return res.status(HttpStatus.NOT_FOUND).json({message: "The cart you're looking on is can't be found"});
+    }
+    
+    return res.status(HttpStatus.OK).json({message: "Success", data: exists});
   }
 
   @Post("/create")
@@ -19,15 +29,15 @@ export class CartController {
         const cartData = await this.cartService.createCart();
     
         for(const item of payload.product_data){
-            await this.cartService.createCartItems({
-                cart_id: cartData.dataValues.id,
-                item_name: item.product_name,
-                item_qty: item.product_qty,
-                item_amount: item.product_amount,
-                item_code: item.product_code
-            });
+          await this.cartService.createCartItems({
+              cart_id: cartData.dataValues.id,
+              item_name: item.product_name,
+              item_qty: item.product_qty,
+              item_amount: item.product_amount,
+              item_code: item.product_code
+          });
         }
-        return res.status(200).json({message: "Success"})
+        return res.status(200).json({message: "Success", cart_id: cartData.dataValues.id})
     }catch(error){
         console.log(error)
         return res.status(500).json({
@@ -41,6 +51,13 @@ export class CartController {
   async updateCart(@Res() res, @Body() payload: AddCartRequest): Promise<any> {
     try{
       for(const item of payload.product_data){
+        const exists = await this.cartService.readSpecificCartItems({name: item.product_name, product_id: item.product_code})
+
+        if(exists){
+          await this.cartService.updateCartItems(exists);
+          continue;
+        }
+
         await this.cartService.createCartItems({ 
           cart_id: payload.cart_id,
           item_name: item.product_name,
@@ -76,6 +93,10 @@ export class CartController {
   @Delete("/delete/:id")
   async deleteCart(@Res() res, @Param('id') cartId: string): Promise<any> {
     try{
+      if(!cartId){
+        return res.status(HttpStatus.BAD_REQUEST).json({message: "Please fill in the cart information"});
+      }
+
       await this.cartService.deleteCart(parseInt(cartId));
       return res.status(HttpStatus.OK).json({message: "Success"});
     }catch(error){

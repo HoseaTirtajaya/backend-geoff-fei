@@ -19,7 +19,8 @@ export class ProductSales extends Model<ProductSales> {
 //===================DATABASE RELATION=====================================
     @Column({
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     })
     item_name: string;
 
@@ -37,7 +38,8 @@ export class ProductSales extends Model<ProductSales> {
 
     @Column({
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     })
     item_code: string;
 }

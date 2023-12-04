@@ -44,6 +44,15 @@ export type CreateProductSales = {
     item_code: string
 }
 
+export type ProductSalesDTO = {
+    id: number
+    cart_id: number
+    item_name: string
+    item_qty: number
+    item_amount: number
+    item_code: string
+}
+
 export class AddCartRequest {
     @ApiProperty()
     cart_id: number;
