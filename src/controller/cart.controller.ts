@@ -17,7 +17,7 @@ export class CartController {
     }
     
     if(!exists){
-      return res.status(HttpStatus.NOT_FOUND).json({message: "The cart you're looking on is can't be found"});
+      return res.status(HttpStatus.NOT_FOUND).json({message: "Your cart is currently empty"});
     }
     
     return res.status(HttpStatus.OK).json({message: "Success", data: exists});
