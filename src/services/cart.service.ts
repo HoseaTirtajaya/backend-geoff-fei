@@ -25,6 +25,10 @@ export class CartService {
     return await this.Cart.findByPk(id, {include: ProductSales})
   }
 
+  async readCartItemById(id: number): Promise<any> {
+    return await this.CartItems.findByPk(id);
+  }
+
   async readSpecificCartItems(payload: {name: string, product_id: string}): Promise<any> {
     return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id}});
   }
@@ -34,7 +38,12 @@ export class CartService {
     return await this.CartItems.update({ item_qty: updatedQty }, {where: { id: payload.id }});
   }
 
-  async removeItemFromCart(payloadData:{cart_id: number, payload: RemoveItemRequest}): Promise<any> {
+  async decreaseQtyCartItems(payload: ProductSalesDTO): Promise<any> {
+    const updatedQty = Sequelize.literal(`item_qty - ${payload.item_qty}`);
+    return await this.CartItems.update({ item_qty: updatedQty }, {where: { id: payload.id }});
+  }
+
+  async removeItemFromCart(payloadData: {cart_id: number, payload: RemoveItemRequest }): Promise<any> {
     return await this.CartItems.destroy({where: { id: payloadData.payload.id, cart_id: payloadData.cart_id }})
   }
 

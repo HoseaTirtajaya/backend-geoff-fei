@@ -79,7 +79,14 @@ export class CartController {
   async deleteItemsOnCart(@Res() res, @Body() payload: RemoveItemFromCartRequest): Promise<any> {
     try{
       for(const item of payload.product_data){
-        await this.cartService.removeItemFromCart({cart_id: payload.cart_id, payload: item});
+        const itemData = await this.cartService.readCartItemById(item.id);
+
+        if(itemData.dataValues.item_qty > item.product_qty){
+          await this.cartService.decreaseQtyCartItems({ id: item.id, cart_id: payload.cart_id, item_name: item.product_name, item_amount: item.product_amount, item_code: item.product_code, item_qty: item.product_qty });
+        } else {
+          await this.cartService.removeItemFromCart({cart_id: payload.cart_id, payload: item});
+        }
+
       }
       return res.status(HttpStatus.OK).json({message: "Success"});
     }catch(error){
