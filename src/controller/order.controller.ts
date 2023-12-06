@@ -5,13 +5,13 @@ import { OrderService } from '../services/order.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @Get("/create")
+  @Post("/create")
   async createInvoice(): Promise<any> {
-    return this.orderService.getHello();
+    return this.orderService.createOrderInvoice();
   }
 
-  @Patch("/create")
-  async updateInvoice(): Promise<any> {
-    return this.orderService.getHello();
-  }
+  // @Patch("/create")
+  // async updateInvoice(): Promise<any> {
+  //   return this.orderService.getHello();
+  // }
 }

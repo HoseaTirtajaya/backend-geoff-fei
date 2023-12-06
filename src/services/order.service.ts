@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Sequelize } from 'sequelize';
-import sequelizeConfig from 'src/config/db.config';
+import { InjectModel } from '@nestjs/sequelize';
+import { CreateOrderInvoice } from 'src/interfaces/order.interfaces.dto';
+import { OrderCart } from 'src/model/cart.model';
+import { OrderSales } from 'src/model/order.model';
+import { ProductSales } from 'src/model/product.sales.model';
 
 @Injectable()
 export class OrderService {
-  private sequelize: Sequelize;
+  constructor(
+    @InjectModel(OrderCart) private Cart: typeof OrderCart,
+    @InjectModel(ProductSales) private CartItems: typeof ProductSales,
+    @InjectModel(OrderSales) private OrderInvoice: typeof OrderSales,
+  ) {}
 
-  constructor() {
-    this.sequelize = new Sequelize(sequelizeConfig);
-  }
 
-
-  async getHello(): Promise<any> {
-    try {
-      console.log(sequelizeConfig)
-      await this.sequelize.authenticate();
-      console.log('Database connection has been established successfully.');
-      return true;
-    } catch (error) {
-      console.error('Unable to connect to the database:', error);
-      return false;
-    }
+  async createOrderInvoice(payload: CreateOrderInvoice): Promise<any> {
+    
   }
 }
