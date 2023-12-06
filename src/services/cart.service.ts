@@ -29,8 +29,8 @@ export class CartService {
     return await this.CartItems.findByPk(id);
   }
 
-  async readSpecificCartItems(payload: {name: string, product_id: string}): Promise<any> {
-    return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id}});
+  async readSpecificCartItems(payload: {name: string, product_id: string, cartId: number}): Promise<any> {
+    return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id, cart_id: payload.cartId}});
   }
 
   async updateCartItems(payload: ProductSalesDTO): Promise<any> {

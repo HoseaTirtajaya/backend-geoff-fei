@@ -51,7 +51,7 @@ export class CartController {
   async updateCart(@Res() res, @Body() payload: AddCartRequest): Promise<any> {
     try{
       for(const item of payload.product_data){
-        const exists = await this.cartService.readSpecificCartItems({name: item.product_name, product_id: item.product_code})
+        const exists = await this.cartService.readSpecificCartItems({name: item.product_name, product_id: item.product_code, cartId: payload.cart_id })
 
         if(exists){
           await this.cartService.updateCartItems(exists);
