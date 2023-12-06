@@ -7,7 +7,7 @@ import { OrderSales } from './order.model';
 export class OrderCart extends Model<OrderCart> {
 //===================DATABASE RELATION=====================================
     @HasMany(() => ProductSales)
-    product_item: ProductSales
+    product_item: ProductSales[]
 
     @HasOne(() => OrderSales)
     cart_detail: OrderSales

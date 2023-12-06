@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
-import { OrderController } from './controller/order.controller';
-import { OrderService } from './services/order.service';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import sequelizeConfig from './config/db.config';
-import { OrderSales } from './model/order.model';
+import { CartController } from './controller/cart.controller';
+import { OrderController } from './controller/order.controller';
 import { OrderCart } from './model/cart.model';
+import { OrderSales } from './model/order.model';
 import { ProductSales } from './model/product.sales.model';
 import { CartService } from './services/cart.service';
-import { CartController } from './controller/cart.controller';
-import { Sequelize } from 'sequelize';
+import { OrderService } from './services/order.service';
 
 @Module({
   imports: [

@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize';
 import { CreateProductSales, ProductSalesDTO, RemoveItemFromCartRequest, RemoveItemRequest } from 'src/interfaces/cart.interfaces.dto';
+import { OrderPaymentStatus } from 'src/interfaces/order.interfaces.dto';
 import { OrderCart } from 'src/model/cart.model';
+import { OrderSales } from 'src/model/order.model';
 import { ProductSales } from 'src/model/product.sales.model';
 
 @Injectable()
@@ -10,6 +12,7 @@ export class CartService {
 
   constructor(
     @InjectModel(OrderCart) private Cart: typeof OrderCart,
+    @InjectModel(OrderSales) private transactionModel: typeof OrderSales,
     @InjectModel(ProductSales) private CartItems: typeof ProductSales
   ) {}
 
@@ -22,15 +25,15 @@ export class CartService {
   }
 
   async readCartData(id: string): Promise<any> {
-    return await this.Cart.findByPk(id, {include: ProductSales})
+    return await this.Cart.findByPk(id, {include: [{ model: ProductSales }, { model: OrderSales }]})
   }
 
   async readCartItemById(id: number): Promise<any> {
     return await this.CartItems.findByPk(id);
   }
 
-  async readSpecificCartItems(payload: {name: string, product_id: string}): Promise<any> {
-    return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id}});
+  async readSpecificCartItems(payload: {name: string, product_id: string, cartId: number}): Promise<any> {
+    return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id, cart_id: payload.cartId}});
   }
 
   async updateCartItems(payload: ProductSalesDTO): Promise<any> {
