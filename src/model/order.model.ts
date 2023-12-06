@@ -44,12 +44,6 @@ export class OrderSales extends Model<OrderSales> {
         type: DataType.STRING,
         allowNull: false
     })
-    firstName: string;
-
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
     province: string;
 
     @Column({
