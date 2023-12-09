@@ -54,7 +54,7 @@ export class CartController {
         const exists = await this.cartService.readSpecificCartItems({name: item.product_name, product_id: item.product_code, cartId: payload.cart_id })
 
         if(exists){
-          await this.cartService.updateCartItems(exists);
+          await this.cartService.updateCartItems({item: exists, qty: item.product_qty});
           continue;
         }
 

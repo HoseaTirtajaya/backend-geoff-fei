@@ -36,9 +36,9 @@ export class CartService {
     return await this.CartItems.findOne({where: {item_name: payload.name, item_code: payload.product_id, cart_id: payload.cartId}});
   }
 
-  async updateCartItems(payload: ProductSalesDTO): Promise<any> {
-    const updatedQty = Sequelize.literal(`item_qty + ${payload.item_qty}`);
-    return await this.CartItems.update({ item_qty: updatedQty }, {where: { id: payload.id }});
+  async updateCartItems(payload: {item: ProductSalesDTO, qty: number}): Promise<any> {
+    const updatedQty = Sequelize.literal(`item_qty + ${payload.qty}`);
+    return await this.CartItems.update({ item_qty: updatedQty }, {where: { id: payload.item.id }});
   }
 
   async decreaseQtyCartItems(payload: ProductSalesDTO): Promise<any> {
