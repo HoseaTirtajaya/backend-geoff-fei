@@ -19,19 +19,20 @@ export class OrderController {
         return res.status(HttpStatus.OK).json({message: "Success", data: invoiceData});
       }
     }catch(error){
+      console.log(error)
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: "Whoops. Error occured"});
     }
   }
 
-  @Patch("/update-status")
+  @Post("/update-status")
   async updatePaymentStatus(@Res() res, @Body() body: UpdateStatusNotification): Promise<any> {
     try{
-      const exists = await this.orderService.findExistingInvoiceDataByTrxID(body.transaction_details.order_id);
+      const exists = await this.orderService.findExistingInvoiceDataByTrxID(body.order_id);
 
       if(!exists){
         return res.status(HttpStatus.BAD_REQUEST).json({message: "Cannot find data"});
       } else {
-        const invoiceData = await this.orderService.updateTransactionStatus(body.transaction_details.order_id);
+        const invoiceData = await this.orderService.updateTransactionStatus(body.order_id);
         const deleteCart = await this.cartService.deleteCart(exists.dataValues.id);
         return res.status(HttpStatus.OK).json({message: "Success"});
       }

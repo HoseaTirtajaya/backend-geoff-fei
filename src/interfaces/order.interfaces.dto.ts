@@ -53,19 +53,51 @@ export class CreateTransactionRequest {
 
 }
 
-export class UpdateStatusNotificationTransaction {
+export class UpdateStatusNotificationTransactionVA {
     @ApiProperty()
-    order_id: string;
+    va_number: string;
 
     @ApiProperty()
-    gross_amount: number;
+    bank: string;
 
 }
 export class UpdateStatusNotification {
     @ApiProperty()
+    va_numbers: UpdateStatusNotificationTransactionVA[];
+
+    @ApiProperty()
+    transaction_time: string;
+
+    @ApiProperty()
+    transaction_status: string;
+
+    @ApiProperty()
+    transaction_id: string;
+    
+    @ApiProperty()
+    status_message: string;
+
+    @ApiProperty()
+    status_code: string;
+    
+    @ApiProperty()
+    signature_key: string;
+
+    @ApiProperty()
     payment_type: string;
 
     @ApiProperty()
-    transaction_details: UpdateStatusNotificationTransaction;
+    order_id: string;
 
+    @ApiProperty()
+    fraud_status: string;
+
+    @ApiProperty()
+    gross_amount: string;
+
+    @ApiProperty()
+    expiry_time: string;
+
+    @ApiProperty()
+    currency: string;
 }

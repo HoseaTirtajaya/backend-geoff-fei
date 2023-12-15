@@ -27,11 +27,11 @@ export class OrderSales extends Model<OrderSales> {
     })
     first_name: string;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
-    last_name: string;
+    // @Column({
+    //     type: DataType.STRING,
+    //     allowNull: false
+    // })
+    // last_name: string;
 
     @Column({
         type: DataType.STRING,
@@ -99,17 +99,17 @@ export class OrderSales extends Model<OrderSales> {
     })
     total_amount: number;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
-    delivery_courier: string
+    // @Column({
+    //     type: DataType.STRING,
+    //     allowNull: false
+    // })
+    // delivery_courier: string
 
-    @Column({
-        type: DataType.DECIMAL(10, 2),
-        allowNull: false
-    })
-    delivery_charge: number;
+    // @Column({
+    //     type: DataType.DECIMAL(10, 2),
+    //     allowNull: false
+    // })
+    // delivery_charge: number;
 
     @Column({
         type: DataType.STRING,
