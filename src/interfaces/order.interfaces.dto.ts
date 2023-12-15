@@ -52,3 +52,20 @@ export class CreateTransactionRequest {
     delivery_charge: number;
 
 }
+
+export class UpdateStatusNotificationTransaction {
+    @ApiProperty()
+    order_id: string;
+
+    @ApiProperty()
+    gross_amount: number;
+
+}
+export class UpdateStatusNotification {
+    @ApiProperty()
+    payment_type: string;
+
+    @ApiProperty()
+    transaction_details: UpdateStatusNotificationTransaction;
+
+}

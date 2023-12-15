@@ -12,5 +12,11 @@ export class OrderCart extends Model<OrderCart> {
     @HasOne(() => OrderSales)
     cart_detail: OrderSales
 
-//===================DATABASE RELATION=====================================
+//===================DATABASE RELATION=====================================\
+
+    @Column({
+        type: DataType.BOOLEAN,
+        defaultValue: true
+    })
+    active: boolean;
 }

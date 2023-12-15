@@ -25,7 +25,7 @@ export class CartService {
   }
 
   async readCartData(id: string): Promise<any> {
-    return await this.Cart.findByPk(id, {include: [{ model: ProductSales }, { model: OrderSales }]})
+    return await this.Cart.findOne({where: { id, active: true }, include: [{ model: ProductSales }, { model: OrderSales }]})
   }
 
   async readCartItemById(id: number): Promise<any> {
@@ -51,6 +51,6 @@ export class CartService {
   }
 
   async deleteCart(cart_id: number): Promise<any> {
-    return await this.Cart.destroy({where: {id: cart_id}})
+    return await this.Cart.update({active: false}, {where: {id: cart_id}})
   }
 }

@@ -50,6 +50,14 @@ export class CartController {
   @Patch("/add/item")
   async updateCart(@Res() res, @Body() payload: AddCartRequest): Promise<any> {
     try{
+      const cartExists = await this.cartService.readCartData(payload.cart_id.toString());
+
+      if(!cartExists){
+        return res.status(404).json({
+          message: "Your cart is currently empty"
+        });
+      }
+
       for(const item of payload.product_data){
         const exists = await this.cartService.readSpecificCartItems({name: item.product_name, product_id: item.product_code, cartId: payload.cart_id })
 
@@ -78,6 +86,14 @@ export class CartController {
   @Delete("/remove/item")
   async deleteItemsOnCart(@Res() res, @Body() payload: RemoveItemFromCartRequest): Promise<any> {
     try{
+      const cartExists = await this.cartService.readCartData(payload.cart_id.toString());
+
+      if(!cartExists){
+        return res.status(404).json({
+          message: "Your cart is currently empty"
+        });
+      }
+
       for(const item of payload.product_data){
         const itemData = await this.cartService.readCartItemById(item.id);
 
@@ -100,6 +116,14 @@ export class CartController {
   @Delete("/delete/:id")
   async deleteCart(@Res() res, @Param('id') cartId: string): Promise<any> {
     try{
+      const cartExists = await this.cartService.readCartData(cartId);
+
+      if(!cartExists){
+        return res.status(404).json({
+          message: "Your cart is currently empty"
+        });
+      }
+
       if(!cartId){
         return res.status(HttpStatus.BAD_REQUEST).json({message: "Please fill in the cart information"});
       }

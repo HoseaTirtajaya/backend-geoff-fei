@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Patch, Post, Res } from '@nestjs/common';
+import { CreateTransactionRequest, UpdateStatusNotification } from 'src/interfaces/order.interfaces.dto';
 import { OrderService } from '../services/order.service';
-import { CreateTransactionRequest } from 'src/interfaces/order.interfaces.dto';
+import { CartService } from 'src/services/cart.service';
 
 @Controller("/invoice")
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService, private readonly cartService: CartService) {}
 
   @Post("/create")
   async createTransactionInvoice(@Res() res, @Body() payload: CreateTransactionRequest): Promise<any> {
@@ -22,18 +23,20 @@ export class OrderController {
     }
   }
 
-  @Patch("/update-status/:id")
-  async updatePaymentStatus(@Res() res, @Param('id') invoiceId: string): Promise<any> {
+  @Patch("/update-status")
+  async updatePaymentStatus(@Res() res, @Body() body: UpdateStatusNotification): Promise<any> {
     try{
-      const exists = await this.orderService.findExistingInvoiceDataByID(parseInt(invoiceId));
+      const exists = await this.orderService.findExistingInvoiceDataByTrxID(body.transaction_details.order_id);
 
       if(!exists){
         return res.status(HttpStatus.BAD_REQUEST).json({message: "Cannot find data"});
       } else {
-        const invoiceData = await this.orderService.updateTransactionStatus(parseInt(invoiceId))
+        const invoiceData = await this.orderService.updateTransactionStatus(body.transaction_details.order_id);
+        const deleteCart = await this.cartService.deleteCart(exists.dataValues.id);
         return res.status(HttpStatus.OK).json({message: "Success"});
       }
     }catch(error){
+      console.log(error)
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: "Whoops. Error occured"});
     }
   }

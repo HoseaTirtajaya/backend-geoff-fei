@@ -22,8 +22,8 @@ export class OrderService {
     return await this.transactionModel.findOne({where: {cart_id}});
   }
 
-  async findExistingInvoiceDataByID(id: number): Promise<any> {
-    return await this.transactionModel.findByPk(id);
+  async findExistingInvoiceDataByTrxID(id: string): Promise<any> {
+    return await this.Cart.findOne({include: { model: OrderSales, where: { transaction_number: id } }});
   }
 
   async createTransactionData(payload: CreateTransactionRequest): Promise<any> {
@@ -38,7 +38,7 @@ export class OrderService {
     return await this.transactionModel.create({...payload, total_amount: totalAmount});
   }
 
-  async updateTransactionStatus(id: number): Promise<any> {
-    return await this.transactionModel.update({ payment_status: OrderPaymentStatus.SUCCESS }, {where: {id}});
+  async updateTransactionStatus(id: string): Promise<any> {
+    return await this.transactionModel.update({ payment_status: OrderPaymentStatus.SUCCESS }, {where: { transaction_number: id }});
   }
 }

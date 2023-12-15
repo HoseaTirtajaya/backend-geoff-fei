@@ -6,7 +6,11 @@ export class ProductSales extends Model<ProductSales> {
     
 //===================DATABASE RELATION=====================================
 
-    @BelongsTo(() => OrderCart)
+    @BelongsTo(() => OrderCart, {
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        hooks: true
+    })
     cart_detail: OrderCart
 
     @ForeignKey(() => OrderCart)

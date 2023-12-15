@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { OrderPaymentStatus } from 'src/interfaces/order.interfaces.dto';
 import { OrderCart } from './cart.model';
@@ -7,12 +8,16 @@ export class OrderSales extends Model<OrderSales> {
 //===================DATABASE RELATION=====================================
     @ForeignKey(() => OrderCart)
     @Column({
-    type: DataType.INTEGER,
-    allowNull: false
+        type: DataType.INTEGER,
+        allowNull: false
     })
     cart_id: number
 
-    @BelongsTo(() => OrderCart)
+    @BelongsTo(() => OrderCart, {
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        hooks: true
+    })
     cart_detail: OrderCart
 
 //===================DATABASE RELATION=====================================
@@ -105,4 +110,11 @@ export class OrderSales extends Model<OrderSales> {
         allowNull: false
     })
     delivery_charge: number;
+
+    @Column({
+        type: DataType.STRING,
+        defaultValue: () => crypto.randomBytes(8).toString('hex'),
+    })
+    transaction_number: string;
+
 }
