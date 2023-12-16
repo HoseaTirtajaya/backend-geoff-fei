@@ -113,7 +113,7 @@ export class OrderSales extends Model<OrderSales> {
 
     @Column({
         type: DataType.STRING,
-        defaultValue: () => crypto.randomBytes(8).toString('hex'),
+        defaultValue: () => crypto.randomBytes(24).toString('hex'),
     })
     transaction_number: string;
 
